@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: krishi-kendra-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: krishikendra
+      MYSQL_USER: krishi_user
+      MYSQL_PASSWORD: krishi_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - krishi-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: krishi-kendra-backend
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/krishikendra?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: krishi_user
+      SPRING_DATASOURCE_PASSWORD: krishi_password
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY:-demo_key}
+      DATA_GOV_IN_API_KEY: ${DATA_GOV_IN_API_KEY:-demo_key}
+      AI_PROVIDER: gemini
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-db
+    networks:
+      - krishi-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: krishi-kendra-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - krishi-network
+
+volumes:
+  mysql_data:
+
+networks:
+  krishi-network:
+    driver: bridge

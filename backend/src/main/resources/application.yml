@@ -1,0 +1,67 @@
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: krishi-kendra-backend
+  
+  datasource:
+    url: ${DB_URL:jdbc:h2:file:./data/krishikendradb;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 10000
+      max-lifetime: 1800000
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  cache:
+    type: simple
+
+# Application Specific Properties
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
+  
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173}
+
+  openweather:
+    api-key: ${OPENWEATHER_API_KEY:}
+    base-url: ${OPENWEATHER_BASE_URL:https://api.openweathermap.org/data/2.5}
+  
+  data-gov:
+    api-key: ${DATA_GOV_API_KEY:}
+    resource-id: ${DATA_GOV_RESOURCE_ID:9ef84268-d588-465a-a308-a864a43d0070}
+    base-url: https://api.data.gov.in/resource
+
+  ai:
+    provider: ${AI_PROVIDER:gemini}
+    api-key: ${AI_API_KEY:}
+    model: ${AI_MODEL:gemini-1.5-flash}
+
+logging:
+  level:
+    root: INFO
+    com.krishikendra: DEBUG
+    org.springframework.security: INFO
+    org.springframework.web: INFO
