@@ -6,7 +6,7 @@
 # Proxy API calls to backend
 [[redirects]]
   from = "/api/*"
-  to = "https://krishi-kendra-backend.onrender.com/api/:splat"
+  to = "https://krishikendra.onrender.com/api/:splat"
   status = 200
   force = true
 
