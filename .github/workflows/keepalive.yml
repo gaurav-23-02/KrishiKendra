@@ -1,0 +1,23 @@
+name: 24/7 Krishi Kendra Backend Keep-Alive
+
+on:
+  schedule:
+    # Runs every 10 minutes (cron: */10 * * * *)
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping-backend:
+    name: Ping Render Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Keep-Alive Ping
+        run: |
+          echo "Pinging Krishi Kendra backend at https://krishikendra.onrender.com/api/health..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://krishikendra.onrender.com/api/health || true)
+          echo "Response HTTP Status: $RESPONSE"
+          if [ "$RESPONSE" = "200" ]; then
+            echo "✅ Backend is awake and healthy!"
+          else
+            echo "⚠️ Backend returned status $RESPONSE (waking up container)"
+          fi

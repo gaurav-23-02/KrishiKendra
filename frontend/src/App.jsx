@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import { warmUpBackend } from './services/api';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -21,6 +22,10 @@ import ProfilePage from './pages/ProfilePage';
 import AdminPage from './pages/AdminPage';
 
 function App() {
+  useEffect(() => {
+    warmUpBackend();
+  }, []);
+
   return (
     <LanguageProvider>
       <AuthProvider>

@@ -40,8 +40,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
-                        // Public Auth Endpoints
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // Public Auth & Health Endpoints
+                        .requestMatchers("/api/auth/**", "/api/health", "/api/ping").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         
                         // Public Information Endpoints (Mandi, Weather, Schemes, News)
